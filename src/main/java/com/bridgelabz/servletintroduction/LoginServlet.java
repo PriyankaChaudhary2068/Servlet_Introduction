@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.regex.Pattern;
 
 @WebServlet(
         description = "Login Servlet Testing",
@@ -25,6 +26,7 @@ public class LoginServlet extends HttpServlet {
         protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
             //Get request parameters for userID and password
             String user = request.getParameter("user");
+            boolean validuser = (user !=null)&& user.matches("[A-Z]{1}[a-z]{3,6}");
             String pwd = request.getParameter("pwd");
 
             //Get servlet config init params
@@ -34,10 +36,11 @@ public class LoginServlet extends HttpServlet {
                 request.setAttribute("user", user);
                 request.getRequestDispatcher("LoginSuccess.jsp").forward(request, response);
             } else {
-                RequestDispatcher rd = getServletContext().getRequestDispatcher("/login.html");
+                RequestDispatcher requestDispatcher = getServletContext().getRequestDispatcher("/login.html");
                 PrintWriter out = response.getWriter();
                 out.println("<font color = red > Either user name or password is wrong.</font>");
-                rd.include(request, response);
+                requestDispatcher.include(request, response);
+
             }
         }
     }
